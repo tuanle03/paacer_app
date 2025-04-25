@@ -89,4 +89,6 @@ Rails.application.configure do
     host: ENV.fetch("MAILER_HOST", "localhost"),
     port: ENV.fetch("MAILER_PORT", 3000)
   }
+
+  config.hosts.clear
 end
