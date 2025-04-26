@@ -802,6 +802,7 @@ DEPENDENCIES
   capybara (~> 3.39)
   capybara-screenshot (~> 1.0)
   database_cleaner
+  database_cleaner-active_record
   debug
   devise
   dotenv-rails (~> 3.1)
