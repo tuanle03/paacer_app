@@ -1,0 +1,99 @@
+<header id="page-builder-header" class="fixed-top">
+  <nav class="navbar navbar-expand-lg">
+    <%= link_to spree.admin_themes_path, class: 'btn btn-light with-tip px-2', title: 'Go back to dashboard' do %>
+      <%= icon('x', class: 'mr-0') %>
+    <% end %>
+    <div class="px-3">
+      <span class="text-muted mr-1"><%= Spree.t(:theme) %>:</span>
+      <strong class="mr-1"><%= @theme.name %></strong>
+      &nbsp;
+      <% if @theme.default? %>
+        <span class="badge badge-success">
+          <%= icon('check') %>
+          Live
+        </span>
+      <% else %>
+        <span class="badge badge-warning">Draft</span>
+      <% end %>
+    </div>
+    <%= render 'spree/admin/page_builder/pages_dropdown' %>
+
+    <ul class="nav nav-pills" role="tablist">
+      <% if @page.custom? %>
+        <li class="nav-item" role="presentation" data-toggle="modal" data-target="#modal">
+          <%= link_to_with_icon 'settings', Spree.t(:page_settings), spree.edit_admin_page_path(@page.id), class: 'btn btn-light', data: { turbo_frame: 'dialog_modal' } %>
+        </li>
+      <% else %>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active"
+                        title="Page sections"
+                        data-toggle="tab"
+                        data-target="#sections"
+                        type="button"
+                        role="tab"
+                        aria-controls="sections"
+                        aria-selected="true"
+                        data-trigger="hover"
+                        id="sidebar-icon-page">
+            <%= icon 'section', class: 'mr-0' %>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link"
+                  title="Theme"
+                  data-toggle="tab"
+                  data-target="#colors"
+                  type="button"
+                  role="tab"
+                  aria-controls="theme"
+                  aria-selected="false"
+                  data-trigger="hover"
+                  id="sidebar-icon-colors">
+            <%= icon 'palette', class: 'mr-0' %>
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link"
+                title="Fonts"
+                type="button"
+                data-toggle="tab"
+                data-target="#fonts"
+                type="button"
+                role="tab"
+                aria-controls="fonts"
+                aria-selected="false"
+                data-trigger="hover"
+                id="sidebar-icon-fonts">
+            <%= icon 'typography', class: 'mr-0' %>
+          </button>
+        </li>
+      <% end %>
+    </ul>
+
+    <ul class="nav nav-pills ml-auto" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link with-tip" type="button"
+                title="Mobile"
+                data-trigger="hover"
+                data-action="click->page-builder#setResponsiveBreakpoint"
+                data-page-builder-target="mobileButton"
+                data-page-builder-breakpoint-param="mobile">
+          <%= icon 'device-mobile', class: 'mr-0' %>
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active with-tip" type="button" 
+                title="Desktop"
+                data-action="click->page-builder#setResponsiveBreakpoint"
+                data-page-builder-breakpoint-param="desktop"
+                data-trigger="hover"
+                data-page-builder-target="desktopButton">
+          <%= icon 'device-laptop', class: 'mr-0' %>
+        </button>
+      </li>
+    </ul>
+
+    <%= link_to_with_icon 'eye', Spree.t(:preview), @page.preview_url(@theme_preview, @page_preview), class: 'btn btn-light ml-auto', target: '_blank' %>
+    <%= turbo_save_button_tag(@theme.default? ? Spree.t('actions.publish') : Spree.t('actions.save')) %>
+  </nav>
+</header>

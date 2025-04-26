@@ -118,7 +118,11 @@ gem "spree", spree_opts
 gem "spree_emails", spree_opts
 gem "spree_sample", spree_opts
 gem "spree_admin", spree_opts
-gem "spree_storefront", github: "tuanle03/spree", branch: "v5.0.0-patched"
-# gem "spree_storefront", spree_opts
+gem "spree_storefront", spree_opts
 gem "spree_stripe", '~> 1.2.0'
 gem "spree_i18n"
+
+gem 'audited'
+gem 'haml-rails'
+gem 'html2haml'
+gem 'byebug'
