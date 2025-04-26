@@ -1,4 +1,5 @@
 class Spree::User < ApplicationRecord
+  audited except: [:updated_at]
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,

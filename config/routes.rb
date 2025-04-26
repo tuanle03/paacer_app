@@ -22,4 +22,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "spree/home#index"
+
+  Spree::Core::Engine.routes.draw do
+    namespace :admin do
+      resources :audits, only: [:index]
+    end
+  end
 end

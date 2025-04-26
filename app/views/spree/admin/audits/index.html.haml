@@ -1,0 +1,19 @@
+%h1= Spree.t('admin.audit_log')
+%table.table
+  %thead
+    %tr
+      %th User
+      %th Action
+      %th Model
+      %th Changes
+      %th Time
+  %tbody
+    - @audits.each do |audit|
+      %tr
+        %td= audit.user.try(:email) || "System"
+        %td= audit.action
+        %td
+          = audit.auditable_type
+          \###{audit.auditable_id}
+        %td= audit.audited_changes.except("updated_at").to_json
+        %td= audit.created_at.strftime("%Y-%m-%d %H:%M:%S")

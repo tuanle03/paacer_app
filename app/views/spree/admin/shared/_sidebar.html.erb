@@ -1,0 +1,15 @@
+<aside id="main-sidebar">
+  <% if defined?(current_vendor) && current_vendor.present? %>
+    <%= render 'spree/admin/shared/sidebar/vendor_dropdown' %>
+    <%= render 'spree/admin/shared/sidebar/vendor_nav' %>
+  <% else %>
+    <%= render 'spree/admin/shared/sidebar/store_nav' %>
+  <% end %>
+
+  <% unless settings_active? %>
+    <section class="position-sticky d-none d-lg-block w-100 z-index-1000 mt-auto bottom-0">
+      <%= render 'spree/admin/shared/sidebar/enterprise_edition_notice' %>
+      <%= render 'spree/admin/shared/user_dropdown' %>
+    </section>
+  <% end %>
+</aside>
