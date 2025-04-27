@@ -128,5 +128,3 @@ gem 'haml-rails'
 gem 'html2haml'
 gem 'byebug'
 gem 'kaminari'
-
-gem "cssbundling-rails", "~> 1.4"
