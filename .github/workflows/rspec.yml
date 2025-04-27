@@ -53,7 +53,13 @@ jobs:
         env:
           RAILS_ENV: test
         run: |
-          bin/rails db:prepare
+          bin/rails db:setup
+
+      - name: Precompile assets 🔥
+        env:
+          RAILS_ENV: test
+        run: |
+          bin/rails assets:precompile
 
       - name: Run RSpec tests
         env:
