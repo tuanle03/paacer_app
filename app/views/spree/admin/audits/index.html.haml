@@ -1,5 +1,6 @@
-%h1= Spree.t('admin.audit_log')
-%table.table
+%h1.audit-log-title= Spree.t('admin.audit_log')
+
+%table.audit-log-table
   %thead
     %tr
       %th User
@@ -11,9 +12,31 @@
     - @audits.each do |audit|
       %tr
         %td= audit.user.try(:email) || "System"
-        %td= audit.action
         %td
-          = audit.auditable_type
-          \###{audit.auditable_id}
-        %td= audit.audited_changes.except("updated_at").to_json
+          - case audit.action
+          - when "create"
+            %span.action-create Create
+          - when "update"
+            %span.action-update Update
+          - when "destroy"
+            %span.action-destroy Destroy
+          - else
+            %span.action-default= audit.action
+        %td= "#{audit.auditable_type} ##{audit.auditable_id}"
+        %td
+          %table.change-table
+            %thead
+              %tr
+                %th Field
+                %th Old
+                %th New
+            %tbody
+              - audit.audited_changes.except("updated_at").each do |field, (new_value, old_value)|
+                - next if new_value.presence == old_value.presence
+                %tr
+                  %td= field
+                  %td= old_value.presence || "(empty)"
+                  %td= new_value.presence || "(empty)"
         %td= audit.created_at.strftime("%Y-%m-%d %H:%M:%S")
+
+= paginate @audits, previous_label: 'Previous', next_label: 'Next', class: 'pagination'

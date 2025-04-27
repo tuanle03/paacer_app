@@ -3,7 +3,7 @@
 ARG RUBY_VERSION=3.3.0
 FROM ruby:$RUBY_VERSION-slim
 
-# Cài thư viện hệ thống và chuẩn bị môi trường
+# Install system dependencies
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
     build-essential \
@@ -18,34 +18,37 @@ RUN apt-get update -qq && \
     libssl-dev \
     zlib1g-dev \
     libyaml-dev \
-    postgresql-client && \
-    rm -rf /var/lib/apt/lists/*
+    postgresql-client \
+    nodejs \
+    yarn \
+    && rm -rf /var/lib/apt/lists/*
 
-# Tạo thư mục ứng dụng
+# Set working directory
 WORKDIR /rails
 
-# Thiết lập biến môi trường cho bundler
+# Set bundler environment variables
 ENV BUNDLE_JOBS=4 \
     BUNDLE_RETRY=3 \
     BUNDLE_PATH=/bundle \
     RAILS_ENV=development
 
-# Copy Gemfile trước để cache được bước bundle install
+# Copy Gemfile first to leverage Docker cache
 COPY Gemfile Gemfile.lock ./
-
-# Cài đặt gem
 RUN bundle install
 
-# Copy toàn bộ mã nguồn ứng dụng
+# Copy application source code
 COPY . .
 
-# Copy entrypoint script vào image
+# Copy and set permissions for entrypoint script
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
-# Expose cổng Rails
+# Expose Rails server port
 EXPOSE 3000
 
-# Lệnh mặc định khi chạy container (có thể ghi đè trong docker-compose.yml)
-CMD ["bash"]
+# Precompile assets during image build
+RUN bundle exec rails assets:precompile
+
+# Default command
+CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
