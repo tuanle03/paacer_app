@@ -94,7 +94,6 @@ group :test do
   gem 'email_spec'
   gem 'factory_bot'
   gem 'factory_bot_rails'
-  gem 'database_cleaner'
   gem 'database_cleaner-active_record'
   gem 'rspec-activemodel-mocks', '~> 1.0'
   gem 'rspec-retry'
