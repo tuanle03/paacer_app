@@ -1,6 +1,29 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
+
+require File.expand_path('../config/environment', __dir__)
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'spec_helper'
+require 'database_cleaner/active_record'
+
+RSpec.configure do |config|
+  if Rails.env.test?
+    ENV['DATABASE_URL'] = ENV['DATABASE_TEST_URL'] || ENV['DATABASE_URL']
+    DatabaseCleaner.allow_remote_database_url = true
+    config.before(:suite) do
+      DatabaseCleaner.clean_with(:truncation)
+      DatabaseCleaner.strategy = :transaction
+    end
+
+    config.before(:each) do
+      DatabaseCleaner.start
+    end
+
+    config.append_after(:each) do
+      DatabaseCleaner.clean
+    end
+  end
+end
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

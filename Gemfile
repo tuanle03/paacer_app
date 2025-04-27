@@ -74,12 +74,14 @@ group :development do
 end
 
 group :development, :test do
+  gem 'rspec-rails', '~> 6.1'
   gem 'brakeman'
   gem 'dotenv-rails', '~> 3.1'
   gem 'rubocop', '~> 1.23.0'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'selenium-webdriver', '~> 4.7.1'
+  gem 'rails-controller-testing'
 
   # monitoring
   gem 'pry'
@@ -92,9 +94,8 @@ group :test do
   gem 'email_spec'
   gem 'factory_bot'
   gem 'factory_bot_rails'
-  gem 'database_cleaner'
+  gem 'database_cleaner-active_record'
   gem 'rspec-activemodel-mocks', '~> 1.0'
-  gem 'rspec-rails', '~> 6.1'
   gem 'rspec-retry'
   gem 'rspec_junit_formatter'
   gem 'rubocop-rspec'
@@ -102,7 +103,6 @@ group :test do
   gem 'simplecov'
   gem 'webmock', '~> 3.7', require: false
   gem 'timecop'
-  gem 'rails-controller-testing'
   gem 'webdrivers', '~> 5.0'
 end
 
@@ -126,3 +126,4 @@ gem 'audited'
 gem 'haml-rails'
 gem 'html2haml'
 gem 'byebug'
+gem 'kaminari'
