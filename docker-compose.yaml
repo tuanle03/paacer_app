@@ -6,6 +6,7 @@ services:
     environment:
       RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@postgres:5432/postgres
+      DATABASE_TEST_URL: postgres://postgres:password@postgres:5432/postgres_test
       REDIS_URL: redis://redis:6379/1
       SECRET_KEY_BASE: dummykey1234567890
     volumes:
