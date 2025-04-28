@@ -1,0 +1,85 @@
+name: Deploy to Render and Update GitHub Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create GitHub deployment
+        id: deployment
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/deployments
+          ref: ${{ github.sha }}
+          required_contexts: []
+          environment: production
+          auto_merge: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger new deploy on Render
+        id: render_deploy
+        run: |
+          echo "Triggering new deployment on Render..."
+          response=$(curl -s -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json")
+          deploy_id=$(echo "$response" | jq -r '.id')
+          echo "Render deploy ID: $deploy_id"
+          echo "deploy_id=$deploy_id" >> $GITHUB_ENV
+
+      - name: Poll deployment status on Render
+        run: |
+          echo "Polling Render deployment status..."
+          for i in {1..30}; do
+            status_response=$(curl -s -X GET https://api.render.com/v1/deploys/$deploy_id \
+              -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+              -H "Accept: application/json")
+            deploy_status=$(echo "$status_response" | jq -r '.status')
+
+            echo "Current deploy status: $deploy_status"
+
+            if [[ "$deploy_status" == "live" ]]; then
+              echo "Deployment succeeded!"
+              echo "render_deploy_status=success" >> $GITHUB_ENV
+              exit 0
+            elif [[ "$deploy_status" == "failed" ]]; then
+              echo "Deployment failed!"
+              echo "render_deploy_status=failure" >> $GITHUB_ENV
+              exit 1
+            fi
+
+            echo "Waiting 10 seconds before next check..."
+            sleep 10
+          done
+
+          echo "Deployment polling timeout!"
+          echo "render_deploy_status=failure" >> $GITHUB_ENV
+          exit 1
+
+      - name: Set GitHub deployment status to success
+        if: success()
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/deployments/${{ steps.deployment.outputs.id }}/statuses
+          state: success
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set GitHub deployment status to failure
+        if: failure()
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/deployments/${{ steps.deployment.outputs.id }}/statuses
+          state: failure
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
