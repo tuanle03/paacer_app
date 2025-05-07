@@ -127,3 +127,4 @@ gem 'haml-rails'
 gem 'html2haml'
 gem 'byebug'
 gem 'kaminari'
+gem "aws-sdk-s3", require: false
