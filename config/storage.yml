@@ -7,6 +7,11 @@ local:
   root: <%= Rails.root.join("storage") %>
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
+# Amazon S3 storage configuration:
+# - AWS_ACCESS_KEY_ID: The access key ID for your AWS account.
+# - AWS_SECRET_ACCESS_KEY: The secret access key for your AWS account.
+# - AWS_REGION: The AWS region where your S3 bucket is located.
+# - AWS_BUCKET: The name of your S3 bucket.
 amazon:
   service: S3
   access_key_id: <%= ENV["AWS_ACCESS_KEY_ID"] %>
