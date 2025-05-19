@@ -77,7 +77,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 6.1'
   gem 'brakeman'
   gem 'dotenv-rails', '~> 3.1'
-  gem 'rubocop', '~> 1.23.0'
+  gem 'rubocop', '~> 1.75.6'
   gem 'rubocop-performance'
   gem 'rubocop-rails'
   gem 'selenium-webdriver', '~> 4.7.1'
