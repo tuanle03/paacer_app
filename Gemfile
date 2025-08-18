@@ -74,7 +74,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 6.1'
+  gem 'rspec-rails', '~> 8.0'
   gem 'brakeman'
   gem 'dotenv-rails', '~> 3.1'
   gem 'rubocop', '~> 1.23.0'
